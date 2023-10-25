@@ -6,3 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+tonic = { version = "0.10.2", features = ["gzip"] }
+prost = "0.12.1"
+prost-types = "0.12.1"
+
+[build-dependencies]
+proto-builder-trait = "0.5.1"
+tonic-build = "0.10.2"
