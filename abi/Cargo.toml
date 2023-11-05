@@ -9,6 +9,7 @@ edition = "2021"
 tonic = { version = "0.10.2", features = ["gzip"] }
 prost = "0.12.1"
 prost-types = "0.12.1"
+thiserror = "1.0.50"
 
 [build-dependencies]
 proto-builder-trait = "0.5.1"
