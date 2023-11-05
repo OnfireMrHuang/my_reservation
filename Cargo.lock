@@ -6,9 +6,11 @@ version = 3
 name = "abi"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "prost 0.12.1",
  "prost-types 0.12.1",
  "proto-builder-trait",
+ "sqlx",
  "thiserror",
  "tonic",
  "tonic-build 0.10.2",

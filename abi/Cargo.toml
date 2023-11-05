@@ -10,6 +10,13 @@ tonic = { version = "0.10.2", features = ["gzip"] }
 prost = "0.12.1"
 prost-types = "0.12.1"
 thiserror = "1.0.50"
+chrono = { version = "0.4.31", features = ["serde"] }
+sqlx = { version = "0.7.2", features = [
+	"runtime-tokio-rustls",
+	"postgres",
+	"chrono",
+	"uuid",
+] }
 
 [build-dependencies]
 proto-builder-trait = "0.5.1"
