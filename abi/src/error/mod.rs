@@ -8,6 +8,12 @@ pub enum Error {
     #[error("非法的开始或结束预定时间")]
     InvalidTime,
 
+    #[error("非法的用户ID: {0}")]
+    InvalidUserId(String),
+
+    #[error("非法的资源ID: {0}")]
+    InvalidResourceId(String),
+
     #[error("未知错误")]
     Unknown,
 }

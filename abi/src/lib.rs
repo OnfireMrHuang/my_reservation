@@ -3,8 +3,6 @@ mod pb;
 mod types;
 mod utils;
 
-use std::fmt::Result;
-
 pub use error::*;
 pub use pb::*;
 pub use types::*;
@@ -15,9 +13,9 @@ pub type UserId = i64;
 pub type ResourceId = String;
 
 // 定义校验特征，用于校验非法时抛出错误
-// pub trait Validate {
-//     fn validate(&self) -> Result<(), Error>;
-// }
+pub trait Validate {
+    fn validate(&self) -> Result<(), Error>;
+}
 
 // 定义预定状态
 #[derive(Debug, Clone, Copy, PartialEq, Eq, sqlx::Type)]

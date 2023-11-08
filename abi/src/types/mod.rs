@@ -1,4 +1,5 @@
 mod reservation;
+mod reservation_status;
 
 use chrono::{DateTime, Utc};
 use prost_types::Timestamp;
