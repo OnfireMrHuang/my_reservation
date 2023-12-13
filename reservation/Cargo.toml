@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 chrono = { version = "0.4.31", features = ["serde"] }
-sqlx = { version = "0.7.2", features = [
+sqlx = { version = "0.6.2", features = [
 	"postgres",
 	"runtime-tokio-rustls",
 	"chrono",
@@ -15,4 +15,9 @@ sqlx = { version = "0.7.2", features = [
 ] }
 abi = { version = "0.1.0", path = "../abi" } # 导入本地 abi 库
 async-trait = "0.1.74"
+tokio = { version = "1.33.0", features = ["full"] }
+
+[dev-dependencies]
+sqlx-db-tester = "0.1.1"
+prost-types = "0.12.3"
 tokio = { version = "1.33.0", features = ["full"] }

@@ -3,11 +3,6 @@ mod manager;
 
 use async_trait::async_trait;
 use sqlx::PgPool;
-use tokio::sync::mpsc;
-
-pub struct ReservationManager {
-    pool: PgPool,
-}
 
 // 定义业务接口
 #[async_trait]
