@@ -76,21 +76,21 @@ mod tests {
 
     #[test]
     fn config_should_be_loaded() {
-        let config = Config::load("../service/fixtures/config.yaml").unwrap();
+        let config = Config::load("../service/fixtures/config.yml").unwrap();
         assert_eq!(
             config,
             Config {
                 db: DbConfig {
-                    host: "localhost".to_string(),
+                    host: "10.11.32.24".to_string(),
                     port: 5432,
-                    user: "postgres".to_string(),
-                    password: "postgres".to_string(),
-                    database: "reservation".to_string(),
+                    user: "tester".to_string(),
+                    password: "test123".to_string(),
+                    database: "rsvp".to_string(),
                     max_connections: 5,
                 },
                 server: ServerConfig {
                     host: "0.0.0.0".to_string(),
-                    port: 50051,
+                    port: 10020,
                 }
             }
         );

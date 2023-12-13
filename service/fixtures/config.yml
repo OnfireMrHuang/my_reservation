@@ -1,0 +1,9 @@
+db:
+  host: 10.11.32.24
+  port: 5432
+  user: tester
+  password: test123
+  database: rsvp
+server:
+  host: 0.0.0.0
+  port: 10020
