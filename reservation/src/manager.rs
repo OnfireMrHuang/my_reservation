@@ -45,18 +45,18 @@ mod tests {
     use super::*;
     use abi::Reservation;
     use sqlx::PgPool;
-    use sqlx_db_tester::TestDb;
+    use sqlx_db_tester::TestPg;
+    use std::path::Path;
 
     #[tokio::test]
     async fn reserve_should_work_for_valid_window() {
-        let tdb = get_tdb();
+        let tdb = TestPg::new(
+            "postgres://tester:test123@10.11.32.24:5432/".to_string(),
+            Path::new("../migrations"),
+        );
         let pool = tdb.get_pool().await;
         let (rsvp, _manager) = make_tyr_reservation(pool).await;
         assert!(rsvp.id != 0);
-    }
-
-    fn get_tdb() -> TestDb {
-        TestDb::new("10.11.32.24", 5432, "tester", "test123", "../migrations")
     }
 
     async fn make_tyr_reservation(pool: PgPool) -> (Reservation, ReservationManager) {
