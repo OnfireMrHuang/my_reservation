@@ -43,17 +43,21 @@ impl Rsvp for ReservationManager {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::TestPg;
     use abi::Reservation;
-    use sqlx::PgPool;
-    use sqlx_db_tester::TestPg;
+    use sqlx::{Connection, PgConnection, PgPool};
     use std::path::Path;
+
+    fn get_tdb() -> TestPg {
+        TestPg::new(
+            "postgres://tester:test123@10.11.32.24:5432/".to_string(),
+            Path::new("../migrations"),
+        )
+    }
 
     #[tokio::test]
     async fn reserve_should_work_for_valid_window() {
-        let tdb = TestPg::new(
-            "postgres://tester:test123@10.11.32.24:5432/".to_string(),
-            Path::new("../migrations"),
-        );
+        let tdb = get_tdb();
         let pool = tdb.get_pool().await;
         let (rsvp, _manager) = make_tyr_reservation(pool).await;
         assert!(rsvp.id != 0);
