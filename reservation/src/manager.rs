@@ -50,7 +50,7 @@ mod tests {
 
     fn get_tdb() -> TestPg {
         TestPg::new(
-            "postgres://tester:test123@10.11.32.24:5432/".to_string(),
+            "postgres://postgres:Huang2023@10.11.32.24:5432".to_string(),
             Path::new("../migrations"),
         )
     }

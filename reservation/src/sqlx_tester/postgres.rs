@@ -35,15 +35,9 @@ impl TestPg {
                 // 连接postgres数据库并执行创建数据库操作
                 let postgres_url = format!("{}/{}", server_url, "postgres");
                 let mut conn = PgConnection::connect(&postgres_url).await.unwrap();
-                conn.execute(
-                    format!(
-                        r#"CREATE DATABASE IF NOT EXISTS "{dbname}""#,
-                        dbname = dbname_cloned
-                    )
-                    .as_str(),
-                )
-                .await
-                .expect("Error while querying the create database");
+                conn.execute(format!(r#"CREATE DATABASE "{}""#, dbname_cloned).as_str())
+                    .await
+                    .expect("Error while querying the create database");
 
                 // 连接测试数据库并执行迁移代码
                 let mut conn = PgConnection::connect(&url).await.unwrap();
@@ -106,12 +100,12 @@ impl TestPg {
 
 impl Drop for TestPg {
     fn drop(&mut self) {
-        let server_url = format!("{}/{}", self.server_url(), "postgres");
+        let url = format!("{}/{}", self.server_url(), "postgres");
         let dbname = self.dbname.clone();
         thread::spawn(move || {
             let rt = Runtime::new().unwrap();
             rt.block_on(async move {
-                    let mut conn = PgConnection::connect(&server_url).await.unwrap();
+                    let mut conn = PgConnection::connect(&url).await.unwrap();
                     // terminate existing connections
                     sqlx::query(&format!(r#"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE pid <> pg_backend_pid() AND datname = '{dbname}'"#))
                     .execute( &mut conn)
