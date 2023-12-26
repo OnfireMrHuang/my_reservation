@@ -15,10 +15,10 @@ impl From<RsvpStatus> for ReservationStatus {
 impl fmt::Display for ReservationStatus {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
-            ReservationStatus::Pending => write!(f, "Pending"),
-            ReservationStatus::Confirmed => write!(f, "Confirmed"),
-            ReservationStatus::Blocked => write!(f, "Blocked"),
-            ReservationStatus::Unknown => write!(f, "Unknown"),
+            ReservationStatus::Pending => write!(f, "pending"),
+            ReservationStatus::Confirmed => write!(f, "confirmed"),
+            ReservationStatus::Blocked => write!(f, "blocked"),
+            ReservationStatus::Unknown => write!(f, "unknown"),
         }
     }
 }
