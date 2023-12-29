@@ -28,3 +28,13 @@ pub enum RsvpStatus {
     Confirmed,
     Blocked,
 }
+
+// 给预定ID实现校验方法
+impl Validate for ReservationId {
+    fn validate(&self) -> Result<(), Error> {
+        if *self <= 0 {
+            return Err(Error::InvalidReservationId(*self));
+        }
+        Ok(())
+    }
+}

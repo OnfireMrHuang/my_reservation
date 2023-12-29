@@ -2,6 +2,7 @@ use crate::{ReservationManager, Rsvp};
 use abi::Validate;
 use async_trait::async_trait;
 use sqlx::{PgPool, Row};
+use tokio::sync::mpsc;
 
 // 添加reservationManager方法
 impl ReservationManager {
@@ -37,6 +38,110 @@ impl Rsvp for ReservationManager {
         rsvp.id = row.get(0);
 
         Ok(rsvp)
+    }
+
+    // 实现修改状态接口
+    async fn change_status(&self, id: abi::ReservationId) -> Result<abi::Reservation, abi::Error> {
+        // 如果当前状态是pending状态，则更改为确认状态，否则什么也不做
+        id.validate()?;
+        let rsvp: abi::Reservation = sqlx::query_as("UPDATE rsvp.reservations SET status = 'confirmed' WHERE id = $1 AND status = 'pending' RETURNING *")
+            .bind(id)
+            .fetch_one(&self.pool).await?;
+        Ok(rsvp)
+    }
+
+    // 实现更新备注接口
+    async fn update_note(
+        &self,
+        id: abi::ReservationId,
+        note: String,
+    ) -> Result<abi::Reservation, abi::Error> {
+        id.validate()?;
+        let rsvp: abi::Reservation =
+            sqlx::query_as("UPDATE rsvp.reservations SET note = $2 WHERE id = $1 RETURNING *")
+                .bind(id)
+                .bind(note)
+                .fetch_one(&self.pool)
+                .await?;
+        Ok(rsvp)
+    }
+
+    // 实现get接口
+    async fn get(&self, id: abi::ReservationId) -> Result<abi::Reservation, abi::Error> {
+        id.validate()?;
+        let rsvp: abi::Reservation =
+            sqlx::query_as("SELECT * FROM rsvp.reservations WHERE id = $1")
+                .bind(id)
+                .fetch_one(&self.pool)
+                .await?;
+        Ok(rsvp)
+    }
+
+    // 实现删除接口
+    async fn delete(&self, id: abi::ReservationId) -> Result<abi::Reservation, abi::Error> {
+        id.validate()?;
+        let rsvp: abi::Reservation =
+            sqlx::query_as("DELETE FROM rsvp.reservations WHERE id = $1 RETURNING *")
+                .bind(id)
+                .fetch_one(&self.pool)
+                .await?;
+        Ok(rsvp)
+    }
+
+    // 实现查询接口
+    async fn query(
+        &self,
+        query: abi::ReservationQuery,
+    ) -> mpsc::Receiver<Result<abi::Reservation, abi::Error>> {
+        let pool = self.pool.clone();
+        // 声明一个channel
+        let (tx, rx) = mpsc::channel(128);
+
+        // 开启一个异步任务查询预订记录
+        tokio::spawn(async move {
+            let sql = query
+        })
+    }
+
+    // 实现过滤接口
+    async fn filter(
+        &self,
+        user_id: Option<String>,
+        resource_id: Option<String>,
+        start: Option<chrono::DateTime<chrono::Utc>>,
+        end: Option<chrono::DateTime<chrono::Utc>>,
+        status: Option<abi::ReservationStatus>,
+    ) -> Result<Vec<abi::Reservation>, abi::Error> {
+        let mut query = "SELECT * FROM rsvp.reservations WHERE 1 = 1".to_string();
+        let mut params = Vec::new();
+
+        if let Some(user_id) = user_id {
+            query += " AND user_id = $1";
+            params.push(user_id);
+        }
+
+        if let Some(resource_id) = resource_id {
+            query += " AND resource_id = $2";
+            params.push(resource_id);
+        }
+
+        if let Some(start) = start {
+            query += " AND timespan && tstzrange($3, $4)";
+            params.push(start);
+            params.push(end.unwrap());
+        }
+
+        if let Some(status) = status {
+            query += " AND status = $5::rsvp.reservation_status";
+            params.push(status.to_string());
+        }
+
+        let rsvps: Vec<abi::Reservation> = sqlx::query_as(&query)
+            .bind(params)
+            .fetch_all(&self.pool)
+            .await?;
+
+        Ok(rsvps)
     }
 }
 

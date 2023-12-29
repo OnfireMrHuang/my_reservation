@@ -17,11 +17,23 @@ pub enum Error {
     #[error("未找到预定记录")]
     NotFound,
 
+    #[error("非法的预定ID: {0}")]
+    InvalidReservationId(i64),
+
     #[error("非法的用户ID: {0}")]
     InvalidUserId(String),
 
     #[error("非法的资源ID: {0}")]
     InvalidResourceId(String),
+
+    #[error("非法的页大小: {0}")]
+    InvalidPageSize(i64),
+
+    #[error("非法的游标: {0}")]
+    InvalidCursor(i64),
+
+    #[error("非法的状态: {0}")]
+    InvalidStatus(i32),
 
     #[error("未知错误")]
     Unknown,
