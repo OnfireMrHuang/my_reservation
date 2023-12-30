@@ -19,6 +19,21 @@ pub trait Validate {
     fn validate(&self) -> Result<(), Error>;
 }
 
+// 定义规范特征，用于规范化(绑定校验特征)
+pub trait Normalizer: Validate {
+    fn do_normalize(&mut self);
+    fn normalize(&mut self) -> Result<(), Error> {
+        self.validate()?;
+        self.do_normalize();
+        Ok(())
+    }
+}
+
+// 定义Tosql特征
+pub trait ToSql {
+    fn to_sql(&self) -> String;
+}
+
 // 定义预定状态
 #[derive(Debug, Clone, Copy, PartialEq, Eq, sqlx::Type)]
 #[sqlx(type_name = "reservation_status", rename_all = "lowercase")]
